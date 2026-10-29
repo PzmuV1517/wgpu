@@ -2295,9 +2295,12 @@ impl MacroCall {
                 Span::default(),
             )?,
             MacroCall::Barrier => {
+                // A work group's control barrier; subgroups have `subgroupBarrier`.
                 ctx.emit_restart();
                 ctx.body.push(
-                    crate::Statement::ControlBarrier(crate::Barrier::all()),
+                    crate::Statement::ControlBarrier(
+                        crate::Barrier::all() - crate::Barrier::SUB_GROUP,
+                    ),
                     meta,
                 );
                 return Ok(None);
